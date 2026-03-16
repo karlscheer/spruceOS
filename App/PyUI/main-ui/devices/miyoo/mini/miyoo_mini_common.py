@@ -191,7 +191,13 @@ class MiyooMiniCommon(MiyooDevice):
             return False
         
     def is_lid_closed(self):
-        return False
+        # TODO: Can I better limit this attempt on the non-miniflip?
+        try:
+            with open("/sys/devices/soc0/soc/soc:hall-mh248/hallvalue", "r") as f:
+                value = f.read().strip()
+                return "0" == value
+        except (FileNotFoundError, IOError) as e:
+            return False
 
     @throttle.limit_refresh(5)
     def is_hdmi_connected(self):
