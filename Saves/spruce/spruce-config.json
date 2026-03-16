@@ -254,6 +254,16 @@
                 ],
                 "selected": "1600"
             },
+            "enablePocketMode": {
+                "devices": ["MIYOO_MINI_FLIP"],
+                "display": "Enable EDC Pocket Mode",
+                "description":"Only power on when lid is open",
+                "options":[
+                    "True",
+                    "False"
+                ],
+                "selected": "True"
+            },
             "overclockSpeedA30": {
                 "devices": ["MIYOO_A30"],
                 "display": "Overclock Speed",

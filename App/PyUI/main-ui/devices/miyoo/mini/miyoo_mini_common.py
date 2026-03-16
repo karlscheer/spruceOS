@@ -114,6 +114,12 @@ class MiyooMiniCommon(MiyooDevice):
         self._set_brightness_to_config()
         self.ensure_wpa_supplicant_conf()
         self.init_gpio()
+
+        # New config option checks if we're in PocketMode. Pocket Mode
+        if PyUiConfig.get_edc_pocket_mode() == True:
+            if self.is_lid_closed():
+                self.power_off()
+
         if(PyUiConfig.enable_button_watchers()):
             from controller.controller import Controller
             #/dev/miyooio if we want to get rid of miyoo_inputd

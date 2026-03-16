@@ -217,3 +217,13 @@ class PyUiConfig:
     @classmethod
     def get_reboot_cmd(cls):
         return cls.get("rebootCmd",None)
+
+    @classmethod
+    def get_edc_pocket_mode(cls):
+        return cls.get("pocketMode",None)
+
+    @classmethod
+    def set_edc_pocket_mode(cls, value):
+        # Pocket mode is either None, True, or False
+        cls._data["pocketMode"] = value
+        cls.save()
