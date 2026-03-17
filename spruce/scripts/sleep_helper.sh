@@ -87,6 +87,7 @@ trigger_sleep() {
         sleep 0.3
     fi
     device_enter_sleep "$IDLE_TIMEOUT"
+    # Miyoo Mini Flip reports to use pseudosleep
     if [ "$(device_uses_pseudo_sleep)" = "true" ]; then
         log_message "Device uses pseudosleep -- starting idle loop"
         log_message "Starting idle timeout countdown: ${IDLE_TIMEOUT}s until poweroff if lid remains closed"
@@ -95,20 +96,26 @@ trigger_sleep() {
 
         while [ "$elapsed" -lt "$IDLE_TIMEOUT" ]; do
             current_lid_state=$(device_lid_open)
-                
+
             # Track if lid was ever closed
-            if [ "$current_lid_state" = "0" ]; then
+            if [ "$current_lid_state" = "0" && "$lid_ever_closed" = false ]; then
                 log_message "Detected lid closed, will now wait for it to open"
                 lid_ever_closed=true
             fi
 
+            # TODO: In pesudosleep we need to still check timeout/power off,
+            # In my experience, when you sleep you open the lid and it
+            # immediately reports saving and powering off
+
             # If lid opened, restore screen and break
-            if [ "$current_lid_state" = "1" ] && [ "$lid_ever_closed" = true ]; then
+            if [ "$current_lid_state" = "1" && "$lid_ever_closed" = true ]; then
                 log_message "Lid opened"
                 sleep_exited=true 
                 break
             elif power_button_pressed; then
-                if [ "$current_lid_state" = "1" ]; then
+                # Only exit pseudosleep when we're not in EDC Pocket Mode
+                POCKET_MODE="$(get_config_value '.menuOptions."System Settings".enablePocketMode.selected' "False")"
+                if [ "$POCKET_MODE" != "True" && "$current_lid_state" = "1" ]; then
                     log_message "Power button pressed, exiting pseudosleep"
                     sleep_exited=true 
                     break

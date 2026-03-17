@@ -135,6 +135,7 @@ while true; do
                 # shutdown from sleep is Instant
                 if [ "$WAKE_ALARM_SEC" -eq -1 ]; then
                     if applicable_process_is_running; then
+                        log_message "Shutdown from sleep through power_button_watchdog" 
                         flag_add "sleep.powerdown" --tmp
                         cat "$DEVICE_BRIGHTNESS_PATH" > "$TMP_BACKLIGHT_PATH"
                         CURRENT_VOLUME="$(get_current_volume)"

@@ -32,7 +32,7 @@ power_key_up () {
 }
 
 power_key_down () {
-
+    # TODO: Is there anything done here to prevent this in EDC mode?
     if [ ! -e /tmp/powerbtn ]; then
         power_btn_press_time=$(date +%s)
         log_message "Power button pressed at $power_btn_press_time" 
@@ -87,4 +87,3 @@ while true; do
     log_message "power_button_watchdog_v2.sh: getevent pipe exited, restarting..."
     sleep 1
 done
-
